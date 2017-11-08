@@ -81,19 +81,19 @@ class SongsController < ApplicationController
 
   private
 
-  def song_params
-    params.require(:song).permit(:title, :artist_name, :artist_id)
-  end
+    def song_params
+      params.require(:song).permit(:title, :artist_name, :artist_id)
+    end
 
-  def invalid_artist_id?
-    params[:artist_id] && !Artist.exists?(id: params[:artist_id])
-  end
+    def invalid_artist_id?
+      params[:artist_id] && !Artist.exists?(id: params[:artist_id])
+    end
 
-  def invalid_song_id?
-    !Song.exists?(id: params[:id])
-  end
+    def invalid_song_id?
+      !Song.exists?(id: params[:id])
+    end
 
-  def found_artist
-    Artist.find_by(id: params[:artist_id])
-  end
+    def found_artist
+      Artist.find_by(id: params[:artist_id])
+    end
 end
