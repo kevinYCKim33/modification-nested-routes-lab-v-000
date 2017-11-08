@@ -1,21 +1,9 @@
 <%= form_for song do |f| %>
   <%= f.label :title %>
-  <%= f.text_field :title %><br> <!-- HBFS -->
+  <%= f.text_field :title %><br>
 
-<!-- When you're coming in from nested routes -->
-<!-- i.e. 3000/artists/3/songs/5/edit -->
+  <%= artist_select(song) %>
 
-
-
-
-<!-- When you're not coming in from nested routes i.e. songs/1/edit -->
-  <% if song.artist.nil? %>
-    <%= f.select :artist_id, options_from_collection_for_select(Artist.all, :id, :name) %>
-  <% else %>
-    <%= f.hidden_field :artist_id %> <!-- 3 -->
-    <%= f.label :artist_name %>
-    <%= f.text_field :artist_name %> <!-- Daft Punk -->
-  <% end %>
   <br />
 
   <%= f.submit %>
