@@ -1,5 +1,4 @@
 class SongsController < ApplicationController
-  before_action :invalid_artist_id?, only: [:new, :edit]
 
   def index
     if params[:artist_id]
@@ -49,6 +48,13 @@ class SongsController < ApplicationController
     if invalid_artist_id?
       flash[:alert] = "Artist not found"
       redirect_to artists_path
+    elsif invalid_song_id?
+      flash[:alert] = "Song not found"
+      if params[:artist_id]
+        redirect_to artist_songs_path(found_artist)
+      else
+        redirect_to songs_path
+      end
     else
       @song = Song.find(params[:id])
     end
@@ -81,5 +87,13 @@ class SongsController < ApplicationController
 
   def invalid_artist_id?
     params[:artist_id] && !Artist.exists?(id: params[:artist_id])
+  end
+
+  def invalid_song_id?
+    !Song.exists?(id: params[:id])
+  end
+
+  def found_artist
+    Artist.find_by(id: params[:artist_id])
   end
 end
