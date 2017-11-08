@@ -1,4 +1,6 @@
 class SongsController < ApplicationController
+  before_action :invalid_artist_id?, only: [:new, :edit]
+
   def index
     if params[:artist_id]
       @artist = Artist.find_by(id: params[:artist_id])
@@ -25,7 +27,12 @@ class SongsController < ApplicationController
   end
 
   def new
-    @song = Song.new
+    if invalid_artist_id?
+      flash[:alert] = "Artist not found"
+      redirect_to artists_path
+    else #you have a valid artist_id or don't have an artist_id in the url at all
+      @song = Song.new(artist_id: params[:artist_id])
+    end
   end
 
   def create
@@ -39,7 +46,12 @@ class SongsController < ApplicationController
   end
 
   def edit
-    @song = Song.find(params[:id])
+    if invalid_artist_id?
+      flash[:alert] = "Artist not found"
+      redirect_to artists_path
+    else
+      @song = Song.find(params[:id])
+    end
   end
 
   def update
@@ -64,7 +76,10 @@ class SongsController < ApplicationController
   private
 
   def song_params
-    params.require(:song).permit(:title, :artist_name)
+    params.require(:song).permit(:title, :artist_name, :artist_id)
+  end
+
+  def invalid_artist_id?
+    params[:artist_id] && !Artist.exists?(id: params[:artist_id])
   end
 end
-
